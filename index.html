@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>邹勋昊 · 个人作品集｜AI 产品策划 / 产品运营 / 内容增长</title>
+<meta name="description" content="邹勋昊的个人作品集：AI 产品策划、产品运营与内容增长，覆盖产品案例、增长案例、短视频制作与 2D 游戏开发。">
+<style>
+  :root{
+    --bg:#ffffff;
+    --bg-soft:#f7f8fa;
+    --text:#1c1f26;
+    --muted:#6b7280;
+    --line:#e5e7eb;
+    --accent:#1a56db;
+    --accent-soft:#eef3fe;
+    --radius:10px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:#cfe0ff}
+  .wrap{max-width:980px;margin:0 auto;padding:0 24px}
+  a{color:inherit;text-decoration:none}
+
+  /* ---------- Nav ---------- */
+  nav{
+    position:sticky;top:0;z-index:100;
+    background:rgba(255,255,255,.88);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:56px}
+  .nav-logo{font-weight:700;font-size:15px;letter-spacing:.3px}
+  .nav-logo em{font-style:normal;color:var(--muted);font-weight:400}
+  .nav-links{display:flex;gap:20px;font-size:13.5px;color:var(--muted)}
+  .nav-links a{transition:color .2s}
+  .nav-links a:hover{color:var(--accent)}
+  @media(max-width:760px){.nav-links{display:none}}
+
+  /* ---------- Hero ---------- */
+  header.hero{padding:110px 0 60px;text-align:center}
+  .hero .name{font-size:clamp(38px,6vw,56px);font-weight:800;letter-spacing:1px;line-height:1.2}
+  .hero .role{margin-top:16px;font-size:clamp(16px,2.4vw,20px);color:var(--text);font-weight:500}
+  .hero .role span{color:var(--accent)}
+  .hero .sub{
+    margin:18px auto 0;max-width:600px;color:var(--muted);font-size:15px;
+  }
+  .hero-chips{margin-top:24px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .chip{
+    font-size:12.5px;color:var(--muted);
+    border:1px solid var(--line);background:var(--bg);
+    padding:5px 14px;border-radius:999px;
+  }
+  .hero-contact{margin-top:26px;display:flex;gap:22px;justify-content:center;flex-wrap:wrap;font-size:14px}
+  .hero-contact a{color:var(--accent);border-bottom:1px solid #b8cdf7;padding-bottom:1px}
+  .hero-contact a:hover{border-bottom-color:var(--accent)}
+  .hero-contact span{color:var(--text)}
+  .stats{
+    margin:50px auto 0;max-width:880px;
+    display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+  }
+  .stat{
+    background:var(--bg-soft);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px 10px;
+  }
+  .stat b{display:block;font-size:clamp(20px,3vw,28px);font-weight:800;color:var(--accent)}
+  .stat span{font-size:12px;color:var(--muted)}
+  @media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}}
+
+  /* ---------- Sections ---------- */
+  section{padding:56px 0}
+  .sec-head{margin-bottom:30px}
+  .sec-head .kicker{
+    font-size:12px;letter-spacing:2.5px;color:var(--accent);font-weight:600;margin-bottom:8px;
+  }
+  .sec-head h2{font-size:clamp(24px,3.4vw,32px);font-weight:800;letter-spacing:.5px}
+  .sec-head p{color:var(--muted);margin-top:10px;font-size:14.5px;max-width:680px}
+  section + section{border-top:1px solid var(--line)}
+
+  .card{
+    background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);
+    padding:26px;margin-bottom:18px;
+    transition:box-shadow .25s,border-color .25s;
+  }
+  .card:hover{box-shadow:0 6px 24px rgba(20,30,60,.06);border-color:#d4d9e2}
+
+  .card h3{font-size:17.5px;font-weight:700;margin-bottom:10px}
+  .card h3 .idx{
+    font-size:11.5px;font-weight:600;color:var(--accent);
+    background:var(--accent-soft);padding:2px 10px;border-radius:999px;
+    margin-right:10px;vertical-align:2px;
+  }
+  .card .desc{color:#3d4450;font-size:14.5px;margin-bottom:12px}
+  .card .duty{
+    font-size:13px;color:var(--muted);
+    border-left:3px solid var(--accent);padding:8px 14px;background:var(--bg-soft);
+    border-radius:0 8px 8px 0;margin-bottom:16px;
+  }
+  .card .duty b{color:#333a46}
+
+  .ability-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:860px){.ability-grid{grid-template-columns:1fr}}
+  .ability{
+    background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);
+    padding:24px 22px;
+  }
+  .ability .ico{font-size:26px;margin-bottom:12px}
+  .ability h3{font-size:16px;margin-bottom:8px}
+  .ability p{font-size:13.5px;color:var(--muted)}
+  .ability .metric{
+    display:inline-block;margin-top:12px;font-size:12.5px;font-weight:600;color:var(--accent);
+    background:var(--accent-soft);padding:3px 12px;border-radius:999px;
+  }
+
+  /* ---------- Images ---------- */
+  .img-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:8px}
+  .img-box{
+    border-radius:8px;overflow:hidden;cursor:zoom-in;position:relative;
+    border:1px solid var(--line);background:#fff;
+  }
+  .img-box img{width:100%;display:block;transition:transform .3s}
+  .img-box:hover img{transform:scale(1.02)}
+  .img-box .cap{
+    position:absolute;left:0;right:0;bottom:0;padding:20px 12px 7px;
+    font-size:12px;color:#fff;background:linear-gradient(transparent,rgba(20,25,35,.72));
+  }
+  .img-full{width:100%;border-radius:8px;border:1px solid var(--line);cursor:zoom-in;margin-top:8px}
+
+  /* ---------- Videos ---------- */
+  .vid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+  .vid-col{display:flex;flex-direction:column;gap:16px}
+  .vid{
+    background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;transition:box-shadow .25s;
+  }
+  .vid:hover{box-shadow:0 6px 24px rgba(20,30,60,.06)}
+  .vid .box{
+    position:relative;aspect-ratio:16/9;background:#f1f3f7;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .vid .box video{width:100%;height:100%;object-fit:contain;display:none;background:#111}
+  .vid .box .playbtn{
+    width:52px;height:52px;border-radius:50%;
+    background:#fff;border:1px solid #d8dde6;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 14px rgba(20,30,60,.12);transition:transform .2s,box-shadow .2s;
+  }
+  .vid .box:hover .playbtn{transform:scale(1.08);box-shadow:0 6px 18px rgba(20,30,60,.18)}
+  .vid .box .playbtn::after{
+    content:"";margin-left:4px;
+    border-style:solid;border-width:9px 0 9px 14px;
+    border-color:transparent transparent transparent var(--accent);
+  }
+  .vid .box .vlabel{
+    position:absolute;left:12px;top:10px;font-size:11px;color:var(--muted);
+    background:rgba(255,255,255,.9);border:1px solid var(--line);
+    padding:2px 10px;border-radius:999px;
+  }
+  .vid .meta{padding:13px 16px 15px}
+  .vid .meta h4{font-size:14.5px;font-weight:700;margin-bottom:4px}
+  .vid .meta p{font-size:12.5px;color:var(--muted)}
+  .vid .meta .badge{
+    display:inline-block;font-size:11px;font-weight:600;color:var(--accent);margin-top:7px;
+    background:var(--accent-soft);padding:2px 10px;border-radius:999px;
+  }
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:860px){.two-col{grid-template-columns:1fr}}
+
+  /* ---------- Painting gallery ---------- */
+  .gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media(max-width:860px){.gallery{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.gallery{grid-template-columns:1fr}}
+  .gallery .img-box img{aspect-ratio:1/1;object-fit:cover}
+
+  /* ---------- Footer ---------- */
+  footer{padding:56px 0 80px;text-align:center}
+  footer h2{font-size:clamp(24px,3.4vw,30px);font-weight:800;margin-bottom:8px}
+  footer .contact-line{
+    display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:22px;font-size:14.5px;
+  }
+  footer .contact-line a{
+    padding:11px 24px;border-radius:8px;
+    border:1px solid var(--line);color:var(--text);
+    transition:border-color .2s,color .2s;display:inline-block;
+  }
+  footer .contact-line a:hover{border-color:var(--accent);color:var(--accent)}
+  footer .job-dir{margin-top:22px;font-size:13.5px;color:var(--muted)}
+  footer .job-dir b{color:#333a46}
+
+  /* ---------- Reveal ---------- */
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.on{opacity:1;transform:none}
+
+  /* ---------- Lightbox ---------- */
+  .lb{
+    position:fixed;inset:0;z-index:200;background:rgba(15,18,24,.92);
+    display:none;align-items:center;justify-content:center;cursor:zoom-out;
+  }
+  .lb.on{display:flex}
+  .lb img{max-width:92vw;max-height:90vh;border-radius:8px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap nav-inner">
+    <div class="nav-logo">邹勋昊<em> · 作品集</em></div>
+    <div class="nav-links">
+      <a href="#about">关于我</a>
+      <a href="#ability">核心能力</a>
+      <a href="#product">产品案例</a>
+      <a href="#growth">增长案例</a>
+      <a href="#content">内容能力</a>
+      <a href="#video">视频作品</a>
+      <a href="#game">游戏开发</a>
+      <a href="#contact">联系我</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <h1 class="name">邹勋昊</h1>
+    <div class="role">AI 产品策划 · 产品运营 · <span>内容增长</span></div>
+    <p class="sub">山东财经大学 · 计算机科学与技术（本科）｜GPA 4.0｜现于北京陌陌科技有限公司担任 AI 社交产品运营实习生，负责 AI 角色运营、官号增长与商业化功能策划。</p>
+    <div class="hero-chips">
+      <span class="chip">需求分析</span>
+      <span class="chip">PRD &amp; Figma 原型</span>
+      <span class="chip">竞品研究</span>
+      <span class="chip">内容增长</span>
+      <span class="chip">数据复盘</span>
+      <span class="chip">3D 建模动画</span>
+      <span class="chip">视频剪辑</span>
+      <span class="chip">Python 开发</span>
+    </div>
+    <div class="hero-contact">
+      <span>📞 15165795532</span>
+      <a href="mailto:z728842620@163.com">✉️ z728842620@163.com</a>
+      <span>📍 北京</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><b>+41%</b><span>官号曝光环比提升（入职首周）</span></div>
+      <div class="stat"><b>+118%</b><span>视频完播率提升</span></div>
+      <div class="stat"><b>16.3%</b><span>封面点击率</span></div>
+      <div class="stat"><b>480万</b><span>个人账号单条最高播放</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- 关于我 -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">ABOUT</div>
+      <h2>关于我</h2>
+      <p>定位于 AI 产品策划、产品运营与内容增长。现于北京陌陌科技有限公司担任 AI 社交产品运营实习生，负责 AI 角色运营、官号增长与商业化功能策划；同时具备从需求分析、方案原型到数据复盘和轻量工具搭建的闭环能力。</p>
+    </div>
+    <div class="card reveal">
+      <h3>教育背景</h3>
+      <p class="desc">山东财经大学 · 计算机科学与技术（本科）｜2023.09 - 2027.06｜GPA 4.0</p>
+      <p class="desc">计算机专业背景，具备 Python 开发、数据处理与产品工具搭建能力，可独立完成从方案到落地的完整闭环。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 核心能力 -->
+<section id="ability">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">ABILITIES</div>
+      <h2>核心能力与可验证成果</h2>
+    </div>
+    <div class="ability-grid">
+      <div class="ability reveal">
+        <div class="ico">🧩</div>
+        <h3>产品策划</h3>
+        <p>围绕商业化、自创音色与 AI 互动玩法，完成竞品研究、需求拆解、方案设计与 Figma 原型输出；部分核心方案进入测试或纳入后续正式页面设计。</p>
+        <span class="metric">方案落地 → 测试 / 正式页面</span>
+      </div>
+      <div class="ability reveal">
+        <div class="ico">📈</div>
+        <h3>增长运营</h3>
+        <p>负责陌陌小红书、抖音官号内容运营，通过选题、封面与标题钩子测试持续复盘，用数据驱动内容策略迭代。</p>
+        <span class="metric">曝光 +41% · 完播率 +118% · 封面点击率 16.3%</span>
+      </div>
+      <div class="ability reveal">
+        <div class="ico">⚙️</div>
+        <h3>运营提效</h3>
+        <p>搭建热门角色筛选工具，覆盖数据解析、Top 筛选、头像预览、重复标注与清单导出，将人工流程工具化。</p>
+        <span class="metric">单次筛选 1 小时 → 5 分钟</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 产品案例 -->
+<section id="product">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">PRODUCT</div>
+      <h2>产品案例｜从需求洞察到方案落地</h2>
+      <p>围绕 AI 社交产品的真实业务问题，完成从用户洞察、竞品拆解到方案设计与原型输出的完整链路。</p>
+    </div>
+
+    <div class="card reveal">
+      <h3><span class="idx">案例一</span>自创音色：定义核心路径并输出原型</h3>
+      <p class="desc">围绕用户创建、修改与混合音色的核心路径，梳理用户场景、竞品能力与需求边界，独立完成 PRD 和 Figma 原型。方案覆盖创建、修改与混合流程，部分核心页面被纳入后续正式页面设计。</p>
+      <div class="duty"><b>职责与结果：</b>独立负责竞品研究、需求边界梳理、PRD 与 Figma 原型输出；创建、修改与混合音色的核心页面被纳入后续正式页面设计。</div>
+      <img class="img-full" src="img/img_00.jpg" alt="自创音色创建与修改流程原型" onclick="openLB(this)">
+    </div>
+
+    <div class="card reveal">
+      <h3><span class="idx">案例二</span>VIP 商业化：从竞品拆解到权益设计</h3>
+      <p class="desc">围绕 AI 社交产品的 VIP 转化需求，调研猫箱、星野、筑梦岛、破次元恋人、Zeta、卿卿我我等竞品，拆解会员权益、付费入口、功能包装与转化链路；结合用户付费动机完成权益设计和功能方案，部分核心方案被团队采纳并进入测试阶段。</p>
+      <div class="duty"><b>职责与结果：</b>独立完成竞品会员体系拆解、用户付费动机归纳与权益方案设计；部分核心方案被团队采纳并进入测试阶段。</div>
+      <div class="img-grid">
+        <div class="img-box"><img src="img/img_01.jpg" alt="原型设计"><div class="cap">原型设计</div></div>
+        <div class="img-box"><img src="img/img_02.jpg" alt="破次元恋人产品调研"><div class="cap">破次元恋人产品调研</div></div>
+        <div class="img-box"><img src="img/img_03.jpg" alt="星野产品调研"><div class="cap">星野产品调研</div></div>
+      </div>
+    </div>
+
+    <div class="card reveal">
+      <h3><span class="idx">案例三</span>互动玩法与内容沉淀</h3>
+      <p class="desc">针对 AI 直播房间冷启动阶段内容单一、用户参与不足的问题，完成小游戏接入与 AI 互动剧场两类玩法框架设计；同时围绕「小手机」模块提出文件夹、共创日记等内容沉淀构想，部分方案被应用于正式功能。</p>
+      <div class="duty"><b>职责与结果：</b>负责小游戏接入、AI 互动剧场与「小手机」内容沉淀的方案框架设计；部分方案被应用于正式功能。</div>
+      <div class="img-grid">
+        <div class="img-box"><img src="img/img_04.jpg" alt="房间扩充内容设计"><div class="cap">房间扩充内容设计</div></div>
+        <div class="img-box"><img src="img/img_05.jpg" alt="TT语音游戏内容调研"><div class="cap">TT语音游戏内容调研</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 增长案例 -->
+<section id="growth">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">GROWTH</div>
+      <h2>增长案例｜内容策略与账号运营</h2>
+      <p>用数据复盘驱动内容迭代，同时验证个人账号的内容生产能力。</p>
+    </div>
+
+    <div class="card reveal">
+      <h3><span class="idx">案例一</span>官号内容增长：以数据复盘驱动迭代</h3>
+      <p class="desc">负责陌陌小红书、抖音官号内容运营，围绕用户画像完成选题、封面、标题钩子与评论反馈的持续迭代；通过内容数据监控和封面/选题 A/B 测试复盘优化策略，入职首周小红书账号曝光环比提升 41%，视频完播率提升 118%，封面点击率达 16.3%。</p>
+      <div class="img-grid">
+        <div class="img-box"><img src="img/img_06.jpg" alt="小红书创作服务平台数据复盘"><div class="cap">小红书创作平台数据复盘（曝光 1.4万 · 封面点击率 16.3%）</div></div>
+      </div>
+    </div>
+
+    <div class="card reveal">
+      <h3><span class="idx">案例二</span>个人项目｜垂类短视频账号运营</h3>
+      <p class="desc">独立运营抖音 3D 建模动画账号与个人生活账号，负责选题、制作、封面、标题与发布时间测试。3D 建模账号单条播放 172.9 万、点赞 7.2 万；个人生活账号单条播放 480 万、点赞 22 万；两账号合计涨粉 1,600+、累计收藏 1 万+，B 站同步产出 10 万+ 播放内容。</p>
+      <div class="img-grid">
+        <div class="img-box"><img src="img/img_07.jpg" alt="抖音账号主页"><div class="cap">抖音账号主页</div></div>
+        <div class="img-box"><img src="img/img_08.jpg" alt="作品数据详情"><div class="cap">作品数据：播放 173.9万 · 点赞 7.3万</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 效率案例 -->
+<section id="tool">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">EFFICIENCY</div>
+      <h2>效率案例｜运营流程工具化</h2>
+    </div>
+    <div class="card reveal">
+      <h3><span class="idx">案例</span>热门角色筛选工具：将人工流程工具化</h3>
+      <p class="desc">针对 AI 热门角色筛选依赖人工翻表、逐个访问头像 URL 并判断角色质量的问题，使用 Codex 搭建纯前端可视化工具，整合 XLSX 解析、Top 筛选、头像预览、重复标注与清单导出；将单次流程由约 1 小时压缩至约 5 分钟，支撑热门角色的持续更新运营。</p>
+      <div class="img-grid">
+        <div class="img-box"><img src="img/img_09.jpg" alt="Top角色数据工具-快速上手"><div class="cap">工具界面 · 快速上手引导</div></div>
+        <div class="img-box"><img src="img/img_10.jpg" alt="热门角色筛选工具界面"><div class="cap">角色筛选 · 预览 · 清单导出</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 内容能力 -->
+<section id="content">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">CREATION</div>
+      <h2>内容生产与视觉表达</h2>
+      <p>以下作品作为内容增长与产品表达能力的补充证据：覆盖 3D 建模动画、三渲二、剪辑转场、游戏混剪与平面绘画，体现从创意构思、画面制作到发布分发的全流程内容生产能力。点击卡片即可播放视频。</p>
+    </div>
+    <div class="vid-grid">
+      <div class="vid reveal">
+        <div class="box" onclick="playVid(this)">
+          <span class="vlabel">3D 角色动画</span>
+          <span class="playbtn"></span>
+          <video controls preload="none" src="video/v_fox.mp4"></video>
+        </div>
+        <div class="meta"><h4>丛林小狐狸动画视频</h4><p>原创 3D 角色动画，覆盖建模、场景搭建与动画制作全流程。</p></div>
+      </div>
+      <div class="vid reveal">
+        <div class="box" onclick="playVid(this)">
+          <span class="vlabel">3D 场景动画</span>
+          <span class="playbtn"></span>
+          <video controls preload="none" src="video/v_sky.mp4"></video>
+        </div>
+        <div class="meta"><h4>天空之城</h4><p>3D 场景动画作品，展示建模、灯光与氛围渲染能力。</p></div>
+      </div>
+      <div class="vid reveal">
+        <div class="box" onclick="playVid(this)">
+          <span class="vlabel">百万播放剪辑</span>
+          <span class="playbtn"></span>
+          <video controls preload="none" src="video/v_jianmo.mp4"></video>
+        </div>
+        <div class="meta"><h4>百万播放建模学习历程剪辑视频</h4><p>记录 3D 建模学习过程，单条最高播放 172.9 万、点赞 7.2 万。</p><span class="badge">🔥 172.9万播放</span></div>
+      </div>
+      <div class="vid reveal">
+        <div class="box" onclick="playVid(this)">
+          <span class="vlabel">3D 动画短片</span>
+          <span class="playbtn"></span>
+          <video controls preload="none" src="video/v_jimu.mp4"></video>
+        </div>
+        <div class="meta"><h4>积木组合动画视频</h4><p>积木题材 3D 动画短片，体现创意构思与动画节奏把控能力。</p></div>
+      </div>
+      <div class="vid reveal">
+        <div class="box" onclick="playVid(this)">
+          <span class="vlabel">三渲二动画</span>
+          <span class="playbtn"></span>
+          <video controls preload="none" src="video/v_sanxuaner.mp4"></video>
+        </div>
+        <div class="meta"><h4>丛林小狐狸三渲二动画视频</h4><p>三渲二风格动画作品，探索 3D 建模与 2D 视觉风格的融合表达。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 官号视频 -->
+<section id="video">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">VIDEO WORKS</div>
+      <h2>APP 官号小红书与抖音运营视频制作</h2>
+      <p>围绕 APP 官号的小红书与抖音运营，完成短视频剪辑与后期制作，覆盖选题表达、叙事节奏、转场设计与视觉风格落地。</p>
+    </div>
+
+    <div class="two-col">
+      <div class="vid-col">
+        <div class="vid reveal">
+          <div class="box" onclick="playVid(this)"><span class="vlabel">AI 创意视频</span><span class="playbtn"></span><video controls preload="none" src="video/v_xique.mp4"></video></div>
+          <div class="meta"><h4>AI 创意视频制作｜喜鹊谋杀案</h4><p>围绕悬疑氛围、叙事推进与信息留白设计内容表达。</p></div>
+        </div>
+        <div class="vid reveal">
+          <div class="box" onclick="playVid(this)"><span class="vlabel">转场剪辑</span><span class="playbtn"></span><video controls preload="none" src="video/v_lunqie.mp4"></video></div>
+          <div class="meta"><h4>蒙版轮切类型视频剪辑</h4><p>利用蒙版轮切强化镜头衔接与视觉节奏。</p></div>
+        </div>
+        <div class="vid reveal">
+          <div class="box" onclick="playVid(this)"><span class="vlabel">创意后期</span><span class="playbtn"></span><video controls preload="none" src="video/v_xiangce.mp4"></video></div>
+          <div class="meta"><h4>立体相册类型视频剪辑</h4><p>通过立体相册效果组织素材，体现视觉创意与后期合成能力。</p></div>
+        </div>
+      </div>
+      <div class="vid-col">
+        <div class="vid reveal">
+          <div class="box" onclick="playVid(this)"><span class="vlabel">热点内容</span><span class="playbtn"></span><video controls preload="none" src="video/v_gezi.mp4"></video></div>
+          <div class="meta"><h4>剪辑作品｜鸽子舞内容创作</h4><p>热点方向趣味短视频，兼顾平台内容感与传播性。</p></div>
+        </div>
+        <div class="vid reveal">
+          <div class="box" onclick="playVid(this)"><span class="vlabel">转场剪辑</span><span class="playbtn"></span><video controls preload="none" src="video/v_huadong.mp4"></video></div>
+          <div class="meta"><h4>蒙版滑动视频剪辑</h4><p>以蒙版滑动衔接镜头，体现画面节奏与转场手法的持续迭代。</p></div>
+        </div>
+        <div class="vid reveal">
+          <div class="box" onclick="playVid(this)"><span class="vlabel">风格化后期</span><span class="playbtn"></span><video controls preload="none" src="video/v_zhizhen.mp4"></video></div>
+          <div class="meta"><h4>纸质抽帧风格类型视频</h4><p>将纸质抽帧动画融入短视频剪辑，展示特殊视觉风格的实现。</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-head reveal" style="margin-top:44px">
+      <h2 style="font-size:clamp(20px,2.8vw,26px)">官号内容案例｜选题、剪辑与转化</h2>
+      <p>从选题切入、素材组织到视觉包装与产品种草的内容制作能力。</p>
+    </div>
+    <div class="two-col">
+      <div class="vid-col">
+        <div class="vid reveal">
+          <div class="box" onclick="playVid(this)"><span class="vlabel">情绪向剪辑</span><span class="playbtn"></span><video controls preload="none" src="video/v_xindong.mp4"></video></div>
+          <div class="meta"><h4>情绪向角色合集｜看完突然理解「心动」这个词了</h4><p>多角色素材筛选与节奏拼接，以互动提问承接用户评论。</p></div>
+        </div>
+        <div class="vid reveal">
+          <div class="box" onclick="playVid(this)"><span class="vlabel">AI 创意视频</span><span class="playbtn"></span><video controls preload="none" src="video/v_shizhuang.mp4"></video></div>
+          <div class="meta"><h4>AI 创意视频｜甜甜圈首届时装周</h4><p>角色展示、秀场氛围与「pick 你的崽」互动钩子设计。</p></div>
+        </div>
+      </div>
+      <div class="vid-col">
+        <div class="vid reveal">
+          <div class="box" onclick="playVid(this)"><span class="vlabel">视觉包装</span><span class="playbtn"></span><video controls preload="none" src="video/v_yingpeng.mp4"></video></div>
+          <div class="meta"><h4>剪辑与视觉包装｜甜甜圈影棚营业中</h4><p>以摄影框、录制 UI 等元素包装 AI 角色内容，突出氛围塑造。</p></div>
+        </div>
+        <div class="vid reveal">
+          <div class="box" onclick="playVid(this)"><span class="vlabel">种草转化</span><span class="playbtn"></span><video controls preload="none" src="video/v_xihuan.mp4"></video></div>
+          <div class="meta"><h4>产品种草与转化表达｜有你喜欢的吗？</h4><p>从人设库切入产品卖点，完成从内容种草到下载引导的表达。</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card reveal" style="margin-top:16px">
+      <h3>游戏对局混剪视频</h3>
+      <p class="desc">游戏对局内容混剪，体现节奏把控、叙事编排与剪辑能力。</p>
+      <div class="vidbox" onclick="playVid(this)">
+        <span class="playbtn"></span>
+        <video controls preload="none" src="video/v_hunqie.mp4"></video>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 绘画作品 -->
+<section id="paint">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">ARTWORKS</div>
+      <h2>个人平面绘画设计作品</h2>
+      <p>个人平面插画作品，涵盖多种题材与风格，体现绘画基础与视觉审美。</p>
+    </div>
+    <div class="gallery">
+      <div class="img-box reveal"><img src="img/img_11.jpg" alt="秋窗绘画作品" onclick="openLB(this)"></div>
+      <div class="img-box reveal"><img src="img/img_12.jpg" alt="吊灯插画" onclick="openLB(this)"></div>
+      <div class="img-box reveal"><img src="img/img_13.jpg" alt="夕阳椰树海景插画" onclick="openLB(this)"></div>
+      <div class="img-box reveal"><img src="img/img_14.jpg" alt="紫色星空游鱼插画" onclick="openLB(this)"></div>
+      <div class="img-box reveal"><img src="img/img_15.jpg" alt="白花树插画" onclick="openLB(this)"></div>
+      <div class="img-box reveal"><img src="img/img_16.jpg" alt="top dream on 插画" onclick="openLB(this)"></div>
+      <div class="img-box reveal"><img src="img/img_17.jpg" alt="电线杆路灯插画" onclick="openLB(this)"></div>
+      <div class="img-box reveal"><img src="img/img_18.jpg" alt="绿色水波纹插画" onclick="openLB(this)"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 游戏开发 -->
+<section id="game">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="kicker">GAME DEV</div>
+      <h2>2D 游戏开发项目</h2>
+      <p>使用 Python 独立完成的 2D 游戏项目，将视觉设计与代码实现整合为完整作品。</p>
+    </div>
+    <div class="two-col">
+      <div class="card reveal">
+        <h3>🛸 外星人入侵</h3>
+        <p class="desc">使用 Python 完成的 2D 射击类游戏项目，围绕开始界面、难度选择、得分反馈与对局流程搭建可运行的游戏交互。</p>
+        <div class="duty"><b>个人职责：</b>独立完成玩法逻辑与界面实现，并自主绘制游戏封面、外星人角色和界面素材。</div>
+        <img class="img-full" src="img/img_19.jpg" alt="外星人入侵游戏封面" onclick="openLB(this)">
+        <div class="vidbox" style="margin-top:14px" onclick="playVid(this)">
+          <span class="playbtn"></span>
+          <video controls preload="none" src="video/v_alien.mp4"></video>
+        </div>
+      </div>
+      <div class="card reveal">
+        <h3>🥟 小龙包保卫战</h3>
+        <p class="desc">使用 Python 完成的 2D 休闲游戏项目，包含完整游戏界面、开始与难度选择、得分展示及实机对局演示，覆盖从玩法设计到交互实现的完整流程。</p>
+        <div class="duty"><b>个人职责：</b>独立完成游戏逻辑与界面开发，自主绘制小龙包角色、场景和 UI 图片素材。</div>
+        <img class="img-full" src="img/img_20.jpg" alt="小龙包保卫战游戏界面" onclick="openLB(this)">
+        <div class="vidbox" style="margin-top:14px" onclick="playVid(this)">
+          <span class="playbtn"></span>
+          <video controls preload="none" src="video/v_xiaolong.mp4"></video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 联系 -->
+<footer id="contact">
+  <div class="wrap">
+    <h2>联系方式</h2>
+    <p style="color:var(--muted);font-size:14px">期待与您交流，欢迎随时联系</p>
+    <div class="contact-line">
+      <a href="tel:15165795532">📞 15165795532</a>
+      <a href="mailto:z728842620@163.com">✉️ z728842620@163.com</a>
+    </div>
+    <div class="job-dir">求职方向：<b>产品策划 / 产品运营 / 内容增长</b></div>
+  </div>
+</footer>
+
+<div class="lb" id="lb" onclick="this.classList.remove('on')"><img id="lbImg" src="" alt=""></div>
+
+<script>
+  // Reveal on scroll
+  const io = new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // Play video on click (lazy load)
+  function playVid(box){
+    const v = box.querySelector('video');
+    const btn = box.querySelector('.playbtn');
+    if (btn) btn.style.display = 'none';
+    v.style.display = 'block';
+    if (!v.getAttribute('data-loaded')){
+      v.setAttribute('data-loaded','1');
+      v.src = v.getAttribute('src');
+    }
+    v.play().catch(()=>{});
+  }
+
+  // Lightbox
+  function openLB(img){
+    document.getElementById('lbImg').src = img.src;
+    document.getElementById('lb').classList.add('on');
+  }
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('lb').classList.remove('on')});
+</script>
+
+<style>
+  .vidbox{
+    position:relative;aspect-ratio:16/9;background:#f1f3f7;border:1px solid var(--line);
+    border-radius:8px;overflow:hidden;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .vidbox video{width:100%;height:100%;object-fit:contain;display:none;background:#111}
+  .vidbox .playbtn{
+    width:52px;height:52px;border-radius:50%;
+    background:#fff;border:1px solid #d8dde6;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 14px rgba(20,30,60,.12);transition:transform .2s;
+  }
+  .vidbox:hover .playbtn{transform:scale(1.08)}
+  .vidbox .playbtn::after{
+    content:"";margin-left:4px;
+    border-style:solid;border-width:9px 0 9px 14px;
+    border-color:transparent transparent transparent var(--accent);
+  }
+</style>
+</body>
+</html>

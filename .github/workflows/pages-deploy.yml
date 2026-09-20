@@ -17,9 +17,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      # 自检 + 部署放在同一步，任何环节出问题都用中文 annotation 直接说清原因。
-      # 注意：本仓库是公开的，日志任何人可见，因此诊断输出只打印账户「名称」和
-      # 「是否与所填一致」的判断，不打印账户 ID 原文。
+      # 自检 + 部署放在同一步。所有失败原因都写进 annotation，
+      # 打开运行页顶部的 Annotations 就能看到，不用翻折叠日志。
+      # 注意：本仓库公开，日志与 annotation 任何人可见，因此诊断只输出账户
+      # 「名称」和判断结论，不打印账户 ID 原文。
       - name: 自检并部署
         env:
           RAW_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -78,27 +79,20 @@ jobs:
             "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects/zouxunhao-portfolio" \
             -H "Authorization: Bearer $CF_TOKEN")
           if [ "$code" != "200" ]; then
-            echo "::error title=令牌无权访问该账户::读取 Pages 项目返回 HTTP $code。令牌本身有效，但访问不到你填的这个账户。下面自动判断是「账户 ID 填错」还是「令牌缺权限」。"
+            # 令牌本身有效，但访问不到该账户。用 /accounts 判断到底是账户 ID 填错还是令牌缺权限。
+            acct_code=$(curl -sS -o /tmp/accounts.json -w '%{http_code}' \
+              "https://api.cloudflare.com/client/v4/accounts" -H "Authorization: Bearer $CF_TOKEN")
+            names=$(grep -o '"name":"[^"\\]*"' /tmp/accounts.json 2>/dev/null \
+              | sed 's/"name":"//; s/"$//' | tr -d '\n' | paste -sd '、' -)
 
-            accts_raw=$(curl -sS "https://api.cloudflare.com/client/v4/accounts" -H "Authorization: Bearer $CF_TOKEN")
-            names=$(printf '%s' "$accts_raw" | grep -o '"name":"[^"\\]*"' | sed 's/"name":"//; s/"$//')
             if [ -z "$names" ]; then
-              echo "   ❌ 这个令牌访问不到任何账户 → 令牌创建时没有绑定「账户资源 / Account resources」。"
-              echo "      请重新创建令牌，务必在 Account resources 一栏里选上你的账户。"
+              echo "::error title=令牌没绑定账户资源::令牌有效，但 /accounts 返回 HTTP $acct_code、看不到任何账户。请到 Cloudflare 后台重新创建令牌，创建时务必在「账户资源 / Account resources」一栏里选中你的账户，权限选「账户 / Account → Cloudflare Pages → 编辑 / Edit」。详情页面：https://dash.cloudflare.com/profile/api-tokens"
+            elif grep -q "$CF_ACCOUNT" /tmp/accounts.json; then
+              echo "::error title=令牌权限不足::账户 ID 没填错——它在令牌可访问的账户列表里。问题出在令牌权限：请确认该令牌的权限是「账户 / Account → Cloudflare Pages → 编辑 / Edit」，而不是 Workers 或其它服务。当前页面：https://dash.cloudflare.com/profile/api-tokens"
             else
-              echo "   ✅ 令牌可以访问这些账户："
-              printf '%s\n' "$names" | sed 's/^/      • /'
-              if printf '%s' "$accts_raw" | grep -q "$CF_ACCOUNT"; then
-                echo "   ✅ 你填的账户 ID 在列表里 → 账户 ID 没填错，问题在令牌权限。"
-                echo "      请确认令牌权限是「账户 / Account → Cloudflare Pages → 编辑 / Edit」，"
-                echo "      而不是别的服务（例如 Workers、Account Settings）。"
-              else
-                echo "   ❌ 你填的账户 ID 不在列表里 → 账户 ID 填错了。"
-                echo "      最常见的错法：把 Zone ID 当成 Account ID —— 两者都是 32 位十六进制，长得很像。"
-                echo "      正确取法：打开 https://dash.cloudflare.com/?to=/:account/workers-and-pages"
-                echo "      地址栏里 dash.cloudflare.com/<这一段就是账户 ID>/workers-and-pages"
-              fi
+              echo "::error title=账户 ID 填错了::你填的账户 ID 不在令牌可访问的账户列表里。令牌能访问的账户是：$names。最常见的原因是把 Zone ID 当成了 Account ID（两者都是 32 位十六进制，长得很像）。正确取法：打开 https://dash.cloudflare.com/?to=/:account/workers-and-pages ，地址栏里 dash.cloudflare.com/<这一段就是账户 ID>/workers-and-pages"
             fi
+            echo "   （Pages 项目接口返回 HTTP $code）响应：$(head -c 200 /tmp/project.json)"
             exit 1
           fi
           echo "   账户 ID 与 Pages 项目均可访问 ✅"

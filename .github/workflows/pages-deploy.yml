@@ -34,6 +34,18 @@ jobs:
             echo "::warning title=Secret 里有多余的空白或换行::已自动清理后继续部署。建议重新保存这两个 Secret，粘贴后确认末尾没有隐藏换行。"
           fi
 
+          # 最常见的填错方式：把说明文字当成值填了进去
+          bad=0
+          if printf '%s' "$CF_TOKEN" | LC_ALL=C grep -q '[^ -~]'; then
+            echo "::error title=Secret 填成了说明文字::CLOUDFLARE_API_TOKEN 的值里含有中文或非英文字符，说明填进去的是说明文字，不是真实令牌。真实令牌形如 cfut_ 开头的一长串字符。请到 Cloudflare 后台重新生成并复制。"
+            bad=1
+          fi
+          if printf '%s' "$CF_ACCOUNT" | LC_ALL=C grep -q '[^ -~]'; then
+            echo "::error title=Secret 填成了说明文字::CLOUDFLARE_ACCOUNT_ID 的值里含有中文或非英文字符，说明填进去的是说明文字，不是真实账户 ID。真实账户 ID 是 32 位十六进制字符（0-9 a-f）。"
+            bad=1
+          fi
+          [ "$bad" = "0" ] || exit 1
+
           ok=1
           if [ -z "$CF_TOKEN" ]; then
             echo "::error title=缺少 Secret::CLOUDFLARE_API_TOKEN 是空的。请到 Settings → Secrets and variables → Actions 添加，名称必须完全一致。"
@@ -59,7 +71,7 @@ jobs:
             "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects/zouxunhao-portfolio" \
             -H "Authorization: Bearer $CF_TOKEN")
           if [ "$code" != "200" ]; then
-            echo "::error title=账户 ID 或令牌权限有误::读取 Pages 项目返回 HTTP $code。请确认两点：1) CLOUDFLARE_ACCOUNT_ID 填的是「账户 ID」而不是 zone ID；2) 令牌权限为 账户/Account → Cloudflare Pages → 编辑/Edit。响应：$(head -c 300 /tmp/project.json)"
+            echo "::error title=账户 ID 或令牌权限有误::读取 Pages 项目返回 HTTP $code。请确认两点：1) CLOUDFLARE_ACCOUNT_ID 填的是真实账户 ID（32 位十六进制），不是说明文字或 zone ID；2) 令牌权限为 账户/Account → Cloudflare Pages → 编辑/Edit。响应：$(head -c 300 /tmp/project.json)"
             exit 1
           fi
           echo "   账户 ID 与 Pages 项目均可访问 ✅"

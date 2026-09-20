@@ -17,10 +17,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      # 自检 + 部署放在同一步。所有失败原因都写进 annotation，
+      # 自检 + 部署 + 部署后校验放在同一步。所有结论都写进 annotation，
       # 打开运行页顶部的 Annotations 就能看到，不用翻折叠日志。
       # 注意：本仓库公开，日志与 annotation 任何人可见，因此诊断只输出账户
-      # 「名称」和判断结论，不打印账户 ID 原文。
+      # 「名称」和判断结论，不打印账户 ID、令牌等原文。
       - name: 自检并部署
         env:
           RAW_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -111,3 +111,20 @@ jobs:
           export CLOUDFLARE_API_TOKEN="$CF_TOKEN"
           export CLOUDFLARE_ACCOUNT_ID="$CF_ACCOUNT"
           npx --yes wrangler@4 pages deploy . --project-name=zouxunhao-portfolio --branch=main
+
+          # 部署后校验：确认这次真的是「生产环境」部署，正式网址确实被更新了。
+          # 如果只是预览部署，网站会显示绿灯但简历上的网址其实没变，必须抓出来。
+          echo "⑥ 校验本次是否为生产环境部署…"
+          curl -sS -o /tmp/deploys.json \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects/zouxunhao-portfolio/deployments?per_page=1" \
+            -H "Authorization: Bearer $CF_TOKEN"
+          env_name=$(grep -o '"environment":"[^"]*"' /tmp/deploys.json | head -n 1 | sed 's/.*:"//; s/"$//')
+          branch=$(grep -o '"branch":"[^"]*"' /tmp/deploys.json | head -n 1 | sed 's/.*:"//; s/"$//')
+          echo "   最新部署：environment=$env_name / branch=$branch"
+
+          if [ "$env_name" = "production" ]; then
+            echo "::notice title=已发布到正式网址::https://zouxunhao-portfolio.pages.dev/ 已更新（environment=production，分支 $branch）"
+          else
+            echo "::error title=这次只部署到了预览环境::environment=$env_name，正式网址 https://zouxunhao-portfolio.pages.dev/ 没有被更新。请检查项目的「生产分支 / Production branch」是否为 main。"
+            exit 1
+          fi

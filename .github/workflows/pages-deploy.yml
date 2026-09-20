@@ -1,0 +1,40 @@
+name: Deploy to Cloudflare Pages
+
+# 推送到 main 时，自动把最新版本部署到 Cloudflare Pages 项目 zouxunhao-portfolio。
+# 网址保持不变：https://zouxunhao-portfolio.pages.dev/
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    name: Deploy portfolio to Cloudflare Pages
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      # Direct Upload 类型项目无法在 Cloudflare 后台修改「生产分支」，只能通过 API 设置。
+      # 如果生产分支不是 main，下面命令里的 --branch=main 会被当成「预览部署」，
+      # 正式网址 https://zouxunhao-portfolio.pages.dev/ 就不会更新。
+      # 所以每次部署前先确保生产分支是 main（失败也不中断，属于兜底步骤）。
+      - name: Ensure production branch is main
+        continue-on-error: true
+        run: |
+          curl -sS -X PATCH \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects/zouxunhao-portfolio" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"production_branch":"main"}' > /dev/null
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy . --project-name=zouxunhao-portfolio --branch=main
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}

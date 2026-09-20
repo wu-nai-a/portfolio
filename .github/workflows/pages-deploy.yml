@@ -17,15 +17,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      # 自检 + 部署放在同一步，任何环节出问题都用中文 annotation 直接说清原因，
-      # 不用再去翻折叠的日志。
+      # 自检 + 部署放在同一步，任何环节出问题都用中文 annotation 直接说清原因。
+      # 注意：本仓库是公开的，日志任何人可见，因此诊断输出只打印账户「名称」和
+      # 「是否与所填一致」的判断，不打印账户 ID 原文。
       - name: 自检并部署
         env:
           RAW_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           RAW_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           # 去掉粘贴 Secret 时常见带入的空格 / 换行 / 制表符。
-          # 令牌（cfut_…）和账户 ID（32 位十六进制）本身不含任何空白字符，清理是安全的。
           CF_TOKEN=$(printf '%s' "$RAW_TOKEN" | tr -d '[:space:]')
           CF_ACCOUNT=$(printf '%s' "$RAW_ACCOUNT" | tr -d '[:space:]')
 
@@ -34,10 +34,10 @@ jobs:
             echo "::warning title=Secret 里有多余的空白或换行::已自动清理后继续部署。建议重新保存这两个 Secret，粘贴后确认末尾没有隐藏换行。"
           fi
 
-          # 最常见的填错方式：把说明文字当成值填了进去
+          # 常见的填错方式一：把说明文字当成值填了进去
           bad=0
           if printf '%s' "$CF_TOKEN" | LC_ALL=C grep -q '[^ -~]'; then
-            echo "::error title=Secret 填成了说明文字::CLOUDFLARE_API_TOKEN 的值里含有中文或非英文字符，说明填进去的是说明文字，不是真实令牌。真实令牌形如 cfut_ 开头的一长串字符。请到 Cloudflare 后台重新生成并复制。"
+            echo "::error title=Secret 填成了说明文字::CLOUDFLARE_API_TOKEN 的值里含有中文或非英文字符，说明填进去的是说明文字，不是真实令牌。真实令牌形如 cfut_ 开头的一长串字符。"
             bad=1
           fi
           if printf '%s' "$CF_ACCOUNT" | LC_ALL=C grep -q '[^ -~]'; then
@@ -45,6 +45,11 @@ jobs:
             bad=1
           fi
           [ "$bad" = "0" ] || exit 1
+
+          # 常见的填错方式二：账户 ID（32 位十六进制）填成了 zone ID（同样是 32 位十六进制）
+          if [ -n "$CF_ACCOUNT" ] && printf '%s' "$CF_ACCOUNT" | LC_ALL=C grep -qvE '^[0-9a-f]{32}$'; then
+            echo "::warning title=账户 ID 格式不常见::通常账户 ID 是 32 位小写十六进制（0-9 a-f）。当前长度 ${#CF_ACCOUNT}，请确认没填成别的东西。"
+          fi
 
           ok=1
           if [ -z "$CF_TOKEN" ]; then
@@ -63,15 +68,37 @@ jobs:
             -H "Authorization: Bearer $CF_TOKEN")
           echo "   HTTP $code — $(head -c 200 /tmp/token.json)"
           if [ "$code" != "200" ]; then
-            echo "::warning title=API 令牌校验未通过::返回 HTTP $code。响应：$(head -c 300 /tmp/token.json)"
+            echo "::error title=API 令牌无效::校验返回 HTTP $code。请到 Cloudflare 后台重新生成令牌并更新 Secret。响应：$(head -c 300 /tmp/token.json)"
+            exit 1
           fi
+          echo "   令牌有效 ✅"
 
           echo "③ 校验账户 ID 与 Pages 项目权限…"
           code=$(curl -sS -o /tmp/project.json -w '%{http_code}' \
             "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects/zouxunhao-portfolio" \
             -H "Authorization: Bearer $CF_TOKEN")
           if [ "$code" != "200" ]; then
-            echo "::error title=账户 ID 或令牌权限有误::读取 Pages 项目返回 HTTP $code。请确认两点：1) CLOUDFLARE_ACCOUNT_ID 填的是真实账户 ID（32 位十六进制），不是说明文字或 zone ID；2) 令牌权限为 账户/Account → Cloudflare Pages → 编辑/Edit。响应：$(head -c 300 /tmp/project.json)"
+            echo "::error title=令牌无权访问该账户::读取 Pages 项目返回 HTTP $code。令牌本身有效，但访问不到你填的这个账户。下面自动判断是「账户 ID 填错」还是「令牌缺权限」。"
+
+            accts_raw=$(curl -sS "https://api.cloudflare.com/client/v4/accounts" -H "Authorization: Bearer $CF_TOKEN")
+            names=$(printf '%s' "$accts_raw" | grep -o '"name":"[^"\\]*"' | sed 's/"name":"//; s/"$//')
+            if [ -z "$names" ]; then
+              echo "   ❌ 这个令牌访问不到任何账户 → 令牌创建时没有绑定「账户资源 / Account resources」。"
+              echo "      请重新创建令牌，务必在 Account resources 一栏里选上你的账户。"
+            else
+              echo "   ✅ 令牌可以访问这些账户："
+              printf '%s\n' "$names" | sed 's/^/      • /'
+              if printf '%s' "$accts_raw" | grep -q "$CF_ACCOUNT"; then
+                echo "   ✅ 你填的账户 ID 在列表里 → 账户 ID 没填错，问题在令牌权限。"
+                echo "      请确认令牌权限是「账户 / Account → Cloudflare Pages → 编辑 / Edit」，"
+                echo "      而不是别的服务（例如 Workers、Account Settings）。"
+              else
+                echo "   ❌ 你填的账户 ID 不在列表里 → 账户 ID 填错了。"
+                echo "      最常见的错法：把 Zone ID 当成 Account ID —— 两者都是 32 位十六进制，长得很像。"
+                echo "      正确取法：打开 https://dash.cloudflare.com/?to=/:account/workers-and-pages"
+                echo "      地址栏里 dash.cloudflare.com/<这一段就是账户 ID>/workers-and-pages"
+              fi
+            fi
             exit 1
           fi
           echo "   账户 ID 与 Pages 项目均可访问 ✅"

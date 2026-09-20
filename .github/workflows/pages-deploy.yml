@@ -12,39 +12,46 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      deployments: write
-    name: Deploy portfolio to Cloudflare Pages
+    name: 部署到 Cloudflare Pages
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
-      # 自检：先用中文把「Secret 没配 / 令牌没权限」这类问题报出来，
-      # 避免只看到一个看不懂的 "The process '/usr/local/bin/npx' failed with exit code 1"。
-      - name: 自检 Cloudflare 凭据
+      # 自检 + 部署放在同一步，任何环节出问题都用中文 annotation 直接说清原因，
+      # 不用再去翻折叠的日志。
+      - name: 自检并部署
         env:
-          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          RAW_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          RAW_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
+          # 去掉粘贴 Secret 时常见带入的空格 / 换行 / 制表符。
+          # 令牌（cfut_…）和账户 ID（32 位十六进制）本身不含任何空白字符，清理是安全的。
+          CF_TOKEN=$(printf '%s' "$RAW_TOKEN" | tr -d '[:space:]')
+          CF_ACCOUNT=$(printf '%s' "$RAW_ACCOUNT" | tr -d '[:space:]')
+
+          echo "① Secret 长度：令牌 ${#RAW_TOKEN} → ${#CF_TOKEN}，账户 ID ${#RAW_ACCOUNT} → ${#CF_ACCOUNT}"
+          if [ "${#RAW_TOKEN}" != "${#CF_TOKEN}" ] || [ "${#RAW_ACCOUNT}" != "${#CF_ACCOUNT}" ]; then
+            echo "::warning title=Secret 里有多余的空白或换行::已自动清理后继续部署。建议重新保存这两个 Secret，粘贴后确认末尾没有隐藏换行。"
+          fi
+
           ok=1
           if [ -z "$CF_TOKEN" ]; then
-            echo "::error title=缺少 Secret::仓库里没有 CLOUDFLARE_API_TOKEN。请到 Settings → Secrets and variables → Actions → New repository secret 添加，名称必须完全一致（全大写、下划线）。"
+            echo "::error title=缺少 Secret::CLOUDFLARE_API_TOKEN 是空的。请到 Settings → Secrets and variables → Actions 添加，名称必须完全一致。"
             ok=0
           fi
           if [ -z "$CF_ACCOUNT" ]; then
-            echo "::error title=缺少 Secret::仓库里没有 CLOUDFLARE_ACCOUNT_ID。请到 Settings → Secrets and variables → Actions → New repository secret 添加，名称必须完全一致（全大写、下划线）。"
+            echo "::error title=缺少 Secret::CLOUDFLARE_ACCOUNT_ID 是空的。请到 Settings → Secrets and variables → Actions 添加，名称必须完全一致。"
             ok=0
           fi
           [ "$ok" = "1" ] || exit 1
-          echo "① 两个 Secret 都已配置（令牌长度 ${#CF_TOKEN}，账户 ID 长度 ${#CF_ACCOUNT}）"
 
-          echo "② 校验 API 令牌是否有效…"
+          echo "② 校验 API 令牌…"
           code=$(curl -sS -o /tmp/token.json -w '%{http_code}' \
             "https://api.cloudflare.com/client/v4/user/tokens/verify" \
             -H "Authorization: Bearer $CF_TOKEN")
-          if [ "$code" = "200" ]; then
-            echo "   令牌有效 ✅"
-          else
-            echo "::warning title=API 令牌校验未通过::返回 HTTP $code，继续尝试部署。响应片段：$(head -c 300 /tmp/token.json)"
+          echo "   HTTP $code — $(head -c 200 /tmp/token.json)"
+          if [ "$code" != "200" ]; then
+            echo "::warning title=API 令牌校验未通过::返回 HTTP $code。响应：$(head -c 300 /tmp/token.json)"
           fi
 
           echo "③ 校验账户 ID 与 Pages 项目权限…"
@@ -52,31 +59,22 @@ jobs:
             "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects/zouxunhao-portfolio" \
             -H "Authorization: Bearer $CF_TOKEN")
           if [ "$code" != "200" ]; then
-            echo "::error title=账户 ID 或令牌权限有误::读取 Pages 项目返回 HTTP $code。请确认：① CLOUDFLARE_ACCOUNT_ID 填的是账户 ID 而不是 zone ID；② 令牌权限为 账户 / Account → Cloudflare Pages → 编辑 / Edit。响应片段：$(head -c 300 /tmp/project.json)"
+            echo "::error title=账户 ID 或令牌权限有误::读取 Pages 项目返回 HTTP $code。请确认两点：1) CLOUDFLARE_ACCOUNT_ID 填的是「账户 ID」而不是 zone ID；2) 令牌权限为 账户/Account → Cloudflare Pages → 编辑/Edit。响应：$(head -c 300 /tmp/project.json)"
             exit 1
           fi
           echo "   账户 ID 与 Pages 项目均可访问 ✅"
 
-      # Direct Upload 类型项目无法在 Cloudflare 后台修改「生产分支」，只能通过 API 设置。
-      # 如果生产分支不是 main，下面的 --branch=main 会被当成「预览部署」，
-      # 正式网址 https://zouxunhao-portfolio.pages.dev/ 就不会更新。
-      - name: 确保生产分支为 main
-        continue-on-error: true
-        env:
-          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
+          # Direct Upload 类型项目无法在 Cloudflare 后台修改「生产分支」，只能通过 API 设置。
+          # 如果生产分支不是 main，下面的 --branch=main 会被当成「预览部署」，
+          # 正式网址 https://zouxunhao-portfolio.pages.dev/ 就不会更新。
+          echo "④ 确保生产分支为 main…"
           curl -sS -X PATCH \
             "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects/zouxunhao-portfolio" \
             -H "Authorization: Bearer $CF_TOKEN" \
             -H "Content-Type: application/json" \
             --data '{"production_branch":"main"}' > /dev/null
-          echo "已确保生产分支为 main"
 
-      - name: Deploy
-        uses: cloudflare/wrangler-action@v4
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy . --project-name=zouxunhao-portfolio --branch=main
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          echo "⑤ 开始部署…"
+          export CLOUDFLARE_API_TOKEN="$CF_TOKEN"
+          export CLOUDFLARE_ACCOUNT_ID="$CF_ACCOUNT"
+          npx --yes wrangler@4 pages deploy . --project-name=zouxunhao-portfolio --branch=main

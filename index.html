@@ -15,6 +15,7 @@
     --accent:#1a56db;
     --accent-soft:#eef3fe;
     --radius:10px;
+    --anchor-offset:76px;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -28,6 +29,7 @@
   ::selection{background:#cfe0ff}
   .wrap{max-width:980px;margin:0 auto;padding:0 24px}
   a{color:inherit;text-decoration:none}
+  [id]{scroll-margin-top:var(--anchor-offset)}
 
   /* ---------- Nav ---------- */
   nav{
@@ -37,46 +39,63 @@
     border-bottom:1px solid var(--line);
   }
   .nav-inner{display:flex;align-items:center;justify-content:space-between;height:56px}
-  .nav-logo{font-weight:700;font-size:15px;letter-spacing:.3px}
+  .nav-logo{font-weight:700;font-size:15px;letter-spacing:.3px;white-space:nowrap}
   .nav-logo em{font-style:normal;color:var(--muted);font-weight:400}
   .nav-links{display:flex;gap:20px;font-size:13.5px;color:var(--muted)}
-  .nav-links a{transition:color .2s}
+  .nav-links a{white-space:nowrap;transition:color .2s}
   .nav-links a:hover{color:var(--accent)}
-  @media(max-width:760px){.nav-links{display:none}}
+  @media(max-width:760px){
+    :root{--anchor-offset:108px}
+    .wrap{padding:0 18px}
+    .nav-inner{height:auto;align-items:flex-start;flex-direction:column;padding-top:10px}
+    .nav-links{width:100%;flex-wrap:wrap;gap:0 8px;font-size:13px;padding:6px 2px 8px}
+    .nav-links a{padding:3px 0}
+  }
+  @media(max-width:380px){:root{--anchor-offset:132px}}
 
   /* ---------- Hero ---------- */
-  header.hero{padding:110px 0 60px;text-align:center}
-  .hero .name{font-size:clamp(38px,6vw,56px);font-weight:800;letter-spacing:1px;line-height:1.2}
-  .hero .role{margin-top:16px;font-size:clamp(16px,2.4vw,20px);color:var(--text);font-weight:500}
-  .hero .role span{color:var(--accent)}
-  .hero .sub{
-    margin:18px auto 0;max-width:600px;color:var(--muted);font-size:15px;
+  header.hero{padding:52px 0 44px}
+  .hero-identity{
+    display:flex;align-items:center;justify-content:space-between;gap:12px 24px;
+    padding-bottom:16px;border-bottom:1px solid var(--line);
   }
-  .hero-chips{margin-top:24px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-  .chip{
-    font-size:12.5px;color:var(--muted);
-    border:1px solid var(--line);background:var(--bg);
-    padding:5px 14px;border-radius:999px;
+  .hero .name{font-size:clamp(28px,4vw,36px);font-weight:800;letter-spacing:.5px;line-height:1.2}
+  .hero .role{margin-top:5px;font-size:16px;color:var(--accent);font-weight:650}
+  .hero-contact{display:flex;flex-wrap:wrap;gap:5px 20px;font-size:13px;font-style:normal}
+  .hero-contact a{display:inline-flex;align-items:baseline;gap:6px;color:var(--accent)}
+  .hero-contact a:hover{text-decoration:underline}
+  .hero-contact span{color:var(--muted)}
+  .hero .sub{margin-top:16px;max-width:780px;color:#3d4450;font-size:15px}
+  .hero .education{margin-top:8px;color:var(--muted);font-size:13px}
+  .hero-skills{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;list-style:none}
+  .hero-skills li{
+    border:1px solid var(--line);border-radius:999px;background:var(--bg-soft);
+    padding:3px 10px;color:#3d4450;font-size:12.5px;
   }
-  .hero-contact{margin-top:26px;display:flex;gap:22px;justify-content:center;flex-wrap:wrap;font-size:14px}
-  .hero-contact a{color:var(--accent);border-bottom:1px solid #b8cdf7;padding-bottom:1px}
-  .hero-contact a:hover{border-bottom-color:var(--accent)}
-  .hero-contact span{color:var(--text)}
-  .advantages{
-    margin:50px auto 0;max-width:880px;
-    display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+  .featured{margin-top:26px}
+  .featured h2{font-size:18px;margin-bottom:12px}
+  .featured-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+  .featured-card{
+    display:flex;flex-direction:column;gap:5px;padding:16px 18px;
+    border:1px solid var(--line);border-radius:var(--radius);background:var(--bg-soft);
+    transition:border-color .2s,background .2s;
   }
-  .advantage-label{
-    margin-top:46px;font-size:11px;letter-spacing:2.2px;
-    color:var(--accent);font-weight:700;
+  .featured-card:hover{border-color:var(--accent);background:var(--accent-soft)}
+  .featured-card:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .featured-card .category{display:flex;justify-content:space-between;color:var(--accent);font-size:12px;font-weight:650}
+  .featured-card h3{font-size:16px;line-height:1.45}
+  .featured-card p{color:var(--muted);font-size:13px;line-height:1.65}
+  @media(max-width:900px){.featured-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:760px){
+    header.hero{padding:28px 0 32px}
+    .hero-identity{flex-direction:column;align-items:flex-start;gap:8px;padding-bottom:12px}
+    .hero-contact{gap:4px 12px}
+    .featured{margin-top:22px}
+    .featured-grid{gap:8px}
+    .featured-card{padding:12px}
+    .featured-card h3{font-size:15px}
   }
-  .advantage{
-    background:var(--bg-soft);border:1px solid var(--line);border-radius:var(--radius);
-    padding:20px 12px;
-  }
-  .advantage b{display:block;font-size:clamp(17px,2.2vw,21px);font-weight:800;color:var(--accent)}
-  .advantage span{display:block;margin-top:5px;font-size:12px;color:var(--muted)}
-  @media(max-width:760px){.advantages{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:360px){.featured-grid{grid-template-columns:1fr}}
 
   /* ---------- Sections ---------- */
   section{padding:56px 0}
@@ -86,7 +105,7 @@
   }
   .sec-head h2{font-size:clamp(24px,3.4vw,32px);font-weight:800;letter-spacing:.5px}
   .sec-head p{color:var(--muted);margin-top:10px;font-size:14.5px;max-width:680px}
-  section + section{border-top:1px solid var(--line)}
+  header.hero + section,section + section{border-top:1px solid var(--line)}
 
   .card{
     background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);
@@ -109,18 +128,17 @@
   }
   .card .duty b{color:#333a46}
 
-  .ability-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-  @media(max-width:860px){.ability-grid{grid-template-columns:1fr}}
-  .ability{
-    background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);
-    padding:24px 22px;
+  .case-facts{font-size:14.5px;color:#3d4450}
+  .case-facts div{
+    display:grid;grid-template-columns:4.5rem minmax(0,1fr);gap:10px;
+    padding:9px 0;border-top:1px solid var(--line);
   }
-  .ability .ico{font-size:26px;margin-bottom:12px}
-  .ability h3{font-size:16px;margin-bottom:8px}
-  .ability p{font-size:13.5px;color:var(--muted)}
-  .ability .metric{
-    display:inline-block;margin-top:12px;font-size:12.5px;font-weight:600;color:var(--accent);
-    background:var(--accent-soft);padding:3px 12px;border-radius:999px;
+  .case-facts dt{font-weight:700;color:var(--text)}
+  .case-facts .result{color:var(--accent);font-weight:650}
+  @media(max-width:560px){
+    section{padding:36px 0}
+    .card{padding:18px}
+    .case-facts div{grid-template-columns:1fr;gap:2px}
   }
 
   .case-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -135,21 +153,22 @@
   .process-flow .arrow{border:0;background:transparent;padding:0;color:#9ca3af}
 
   /* ---------- Images ---------- */
-  .img-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:8px}
-  .img-box{
-    border-radius:8px;overflow:hidden;position:relative;
-    border:1px solid var(--line);background:#fff;
+  .img-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+  .case-image{
+    margin-top:14px;border:1px solid var(--line);border-radius:8px;
+    overflow:hidden;background:var(--bg-soft);
   }
-  .img-box img{width:100%;display:block}
-  .img-box .cap{
-    position:absolute;left:0;right:0;bottom:0;padding:20px 12px 7px;
-    font-size:12px;color:#fff;background:linear-gradient(transparent,rgba(20,25,35,.72));
+  .case-image img{display:block;width:100%;height:auto;max-height:340px;object-fit:contain}
+  .case-image figcaption{
+    padding:8px 12px;border-top:1px solid var(--line);
+    background:var(--bg);font-size:12px;color:var(--muted);
   }
-  .img-full{width:100%;display:block;border:1px solid var(--line);border-radius:8px;margin-top:14px}
-  .figma-link{display:block;margin-top:14px;border-radius:8px;overflow:hidden;outline:1px solid var(--line);background:#f7f7f7;transition:transform .2s ease,box-shadow .2s ease}
-  .figma-link:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(25,48,88,.10)}
-  .figma-link:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-  .figma-shot{width:100%;display:block;background:#f7f7f7}
+  .img-grid .case-image{display:grid;grid-template-rows:1fr auto;margin-top:0}
+  .img-grid .case-image img{align-self:center;max-height:300px}
+  @media(max-width:560px){
+    .img-grid{grid-template-columns:1fr}
+    .case-image img,.img-grid .case-image img{max-height:280px}
+  }
   .evidence-note{margin-top:10px;font-size:12px;color:var(--muted)}
 
   /* ---------- Videos ---------- */
@@ -209,102 +228,81 @@
   footer .job-dir b{color:#333a46}
 
   /* ---------- Reveal ---------- */
-  .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
-  .reveal.on{opacity:1;transform:none}
+  .has-reveal .reveal{opacity:0;transform:translateY(12px);transition:opacity .35s ease,transform .35s ease}
+  .has-reveal .reveal:target,.has-reveal .reveal:focus-within,
+  .has-reveal .reveal.on{opacity:1;transform:none}
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .has-reveal .reveal{opacity:1;transform:none;transition:none}
+  }
 
 </style>
 </head>
 <body>
 
-<nav>
+<nav aria-label="作品集导航">
   <div class="wrap nav-inner">
     <div class="nav-logo">邹勋昊<em> · 作品集</em></div>
     <div class="nav-links">
-      <a href="#about">关于我</a>
-      <a href="#ability">核心能力</a>
       <a href="#product">产品案例</a>
       <a href="#operation">内容运营</a>
       <a href="#growth">增长案例</a>
       <a href="#tool">效率工具</a>
-      <a href="#content">创作能力</a>
+      <a href="#content">内容作品</a>
       <a href="#contact">联系我</a>
     </div>
   </div>
 </nav>
 
-<header class="hero">
+<header class="hero" id="about">
   <div class="wrap">
-    <h1 class="name">邹勋昊</h1>
-    <div class="role">AI 产品 · AI 产品运营 · <span>内容增长</span></div>
-    <p class="sub">山东财经大学 · 计算机科学与技术（本科）｜GPA 4.0｜曾于头部互联网社交平台参与 AI 产品设计、内容供给、创作者生态与增长运营。</p>
-    <div class="hero-chips">
-      <span class="chip">需求分析</span>
-      <span class="chip">PRD &amp; Figma 原型</span>
-      <span class="chip">Prompt 调优</span>
-      <span class="chip">创作者运营</span>
-      <span class="chip">数据复盘</span>
-      <span class="chip">Codex &amp; Python</span>
+    <div class="hero-identity">
+      <div>
+        <h1 class="name">邹勋昊</h1>
+        <p class="role">AI 产品设计与运营</p>
+      </div>
+      <address class="hero-contact" aria-label="联系方式">
+        <a href="tel:15165795532"><span>手机</span>15165795532</a>
+        <a href="mailto:z728842620@163.com"><span>邮箱</span>z728842620@163.com</a>
+      </address>
     </div>
-    <div class="hero-contact">
-      <span>📞 15165795532</span>
-      <a href="mailto:z728842620@163.com">✉️ z728842620@163.com</a>
-      <span>📍 北京</span>
-    </div>
-    <div class="advantage-label">PERSONAL STRENGTHS</div>
-    <div class="advantages">
-      <div class="advantage"><b>产品闭环</b><span>需求洞察 · 方案设计 · 上线验证</span></div>
-      <div class="advantage"><b>AI 场景理解</b><span>角色 · 音色 · 内容分发</span></div>
-      <div class="advantage"><b>增长视角</b><span>内容供给 · 创作者 · 渠道</span></div>
-      <div class="advantage"><b>技术工具化</b><span>Codex · Python · SQL</span></div>
+    <p class="sub">在 AI 社交产品中做过需求分析、流程设计、原型制作和上线验证，也负责过 AI 角色策划、Prompt 调优和创作者运营。遇到重复流程，会用 AI 辅助搭建工具，例如角色筛选和音色匹配工作台。</p>
+    <p class="education">山东财经大学 · 计算机科学与技术 · 2027 届本科 · GPA 4.0</p>
+    <ul class="hero-skills" aria-label="主要能力">
+      <li>需求分析</li>
+      <li>PRD 与 Figma 原型</li>
+      <li>Prompt 调优</li>
+      <li>创作者运营</li>
+      <li>数据复盘</li>
+      <li>Codex 与 Python</li>
+    </ul>
+    <div class="featured" id="ability">
+      <h2>代表案例</h2>
+      <div class="featured-grid">
+        <a class="featured-card" href="#case-diversion">
+          <span class="category">产品设计 <span aria-hidden="true">→</span></span>
+          <h3>跨产品导流改版</h3>
+          <p>重做导流入口与承接路径，渠道日均新增提升至百人级。</p>
+        </a>
+        <a class="featured-card" href="#operation">
+          <span class="category">内容运营 <span aria-hidden="true">→</span></span>
+          <h3>AI 角色与创作者运营</h3>
+          <p>策划与优化数百个角色，部分进入首页推荐池。通过创作活动持续补充内容。</p>
+        </a>
+        <a class="featured-card" href="#tool">
+          <span class="category">效率工具 <span aria-hidden="true">→</span></span>
+          <h3>角色筛选与音色匹配</h3>
+          <p>用 AI 辅助搭建工具，角色筛选耗时从小时级缩短到分钟级。</p>
+        </a>
+        <a class="featured-card" href="#content">
+          <span class="category">内容作品 <span aria-hidden="true">→</span></span>
+          <h3>短视频与 3D 动画</h3>
+          <p>收录个人动画与官号视频，建模作品单条播放 173.9&nbsp;万。</p>
+        </a>
+      </div>
     </div>
   </div>
 </header>
-
-<!-- 关于我 -->
-<section id="about">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="kicker">ABOUT</div>
-      <h2>关于我</h2>
-      <p>定位于 AI 产品、AI 产品运营与内容增长。曾于头部互联网社交平台参与 AI 产品设计与运营，覆盖需求分析、方案原型、内容供给、创作者运营、渠道增长、上线验证与数据复盘，并能使用 Codex 搭建轻量工具优化业务流程。以下工作案例均已进行业务信息脱敏。</p>
-    </div>
-    <div class="card reveal">
-      <h3>教育背景</h3>
-      <p class="desc">山东财经大学 · 计算机科学与技术（本科）｜2023.09 - 2027.06｜GPA 4.0</p>
-      <p class="desc">计算机专业背景，具备 Python 开发、数据处理与产品工具搭建能力，可独立完成从方案到落地的完整闭环。</p>
-    </div>
-  </div>
-</section>
-
-<!-- 核心能力 -->
-<section id="ability">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="kicker">ABILITIES</div>
-      <h2>核心能力与可验证成果</h2>
-    </div>
-    <div class="ability-grid">
-      <div class="ability reveal">
-        <div class="ico">🧩</div>
-        <h3>产品策划</h3>
-        <p>围绕跨产品导流、自创音色、内容搜索与商业化需求，完成需求拆解、用户流程、前后台页面、PRD 与 Figma 原型设计，并跟进评审、研发和上线验证。</p>
-        <span class="metric">需求 → 方案 → 评审 → 上线验证</span>
-      </div>
-      <div class="ability reveal">
-        <div class="ico">📈</div>
-        <h3>AI 内容与创作者运营</h3>
-        <p>负责 AI 角色策划、Prompt 调优与创作 SOP 沉淀，并通过创作者筛选、活动激励、流量扶持与奖励发放扩大优质内容供给。</p>
-        <span class="metric">角色内容生产 · 创作者生态搭建</span>
-      </div>
-      <div class="ability reveal">
-        <div class="ico">⚙️</div>
-        <h3>增长与效率</h3>
-        <p>结合渠道和内容数据持续优化导流、官号与内容策略，同时将角色筛选和音色匹配等重复流程工具化。</p>
-        <span class="metric">渠道增长 · 小时级流程压缩至分钟级</span>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- 产品案例 -->
 <section id="product">
@@ -312,57 +310,73 @@
     <div class="sec-head reveal">
       <div class="kicker">PRODUCT</div>
       <h2>产品案例｜从需求洞察到方案落地</h2>
-      <p>围绕 AI 社交产品的真实业务问题，覆盖需求发现、方案设计、技术评审、研发跟进、上线验证与运营迭代。</p>
+      <p>案例和原型已做业务信息脱敏。</p>
+    </div>
+
+    <div class="card reveal" id="case-diversion">
+      <h3><span class="idx">已上线</span>跨产品导流改版</h3>
+      <dl class="case-facts">
+        <div><dt>问题</dt><dd>原导流方案触达过强，用户体验需要改善，渠道新增处于低位。</dd></div>
+        <div><dt>我的工作</dt><dd>重做导流广告位、交互逻辑和内容承接路径，与导师协作推进技术评审。上线后配置素材，在测试和正式环境中用多个账号验证完整路径。</dd></div>
+        <div><dt>结果</dt><dd class="result">渠道日均新增提升至百人级。</dd></div>
+      </dl>
+      <figure class="case-image">
+        <img loading="lazy" src="img/figma_diversion.png" width="1479" height="750" alt="产品矩阵导流方案 Figma 总览">
+        <figcaption>Figma 原型展示导流入口、下载与打开路径，以及跳转后的承接页面。</figcaption>
+      </figure>
     </div>
 
     <div class="card reveal">
-      <h3><span class="idx">案例一</span>产品矩阵导流：从方案重构到上线验证</h3>
-      <p class="desc">原有跨产品导流方案因投放强度和用户体验问题需要调整。围绕广告位页面、用户交互逻辑和内容承接路径重新设计方案，与 mentor 协作完善后推动技术评审与研发排期；上线后完成素材配置，并在测试和正式环境验证完整流程。</p>
-      <div class="duty"><b>职责与结果：</b>参与需求发现、产品方案、技术对接、上线测试与后续运营的完整流程；导流逻辑符合设计预期，渠道新增由低位提升至稳定的百人级规模。</div>
-      <div class="process-flow"><span>问题识别</span><span class="arrow">→</span><span>方案重构</span><span class="arrow">→</span><span>技术评审</span><span class="arrow">→</span><span>上线验证</span><span class="arrow">→</span><span>运营迭代</span></div>
-      <a class="figma-link" href="img/figma_diversion.png" target="_blank" rel="noopener" aria-label="查看产品矩阵导流方案 Figma 原图">
-        <img class="figma-shot" loading="lazy" src="img/figma_diversion.png" alt="产品矩阵导流方案 Figma 总览">
-      </a>
-      <p class="evidence-note">Figma 方案总览：覆盖跨产品入口、下载与打开路径、广告位样式及承接页面。点击图片可查看原图。</p>
-    </div>
-
-    <div class="card reveal">
-      <h3><span class="idx">案例二</span>自创音色：从需求拆解到功能上线</h3>
+      <h3><span class="idx">已上线</span>自创音色功能设计</h3>
       <p class="desc">针对创作者对音色个性化和创建体验的需求，完成竞品调研、用户场景与需求边界梳理，设计创建、修改及混合音色流程，输出 PRD 与 Figma 原型并跟进评审和研发。</p>
       <div class="duty"><b>职责与结果：</b>部分页面方案被正式采用；功能上线后，优质内容供给得到提升。</div>
       <div class="process-flow"><span>用户场景</span><span class="arrow">→</span><span>竞品研究</span><span class="arrow">→</span><span>流程设计</span><span class="arrow">→</span><span>原型评审</span><span class="arrow">→</span><span>上线跟进</span></div>
-      <img class="img-full" loading="lazy" src="img/img_00.jpg" alt="自创音色创建、修改与混合流程原型">
-      <p class="evidence-note">自创音色流程原型节选，仅展示交互结构与页面路径。</p>
+      <figure class="case-image">
+        <img loading="lazy" src="img/img_00.jpg" width="1600" height="1222" alt="自创音色创建、修改与混合流程原型">
+        <figcaption>自创音色流程原型节选，仅展示交互结构与页面路径。</figcaption>
+      </figure>
     </div>
 
     <div class="card reveal">
-      <h3><span class="idx">案例三</span>精品搜索与内容分发</h3>
+      <h3><span class="idx">进入研发排期</span>精品搜索与内容分发</h3>
       <p class="desc">针对搜索页精品内容发现效率不足的问题，设计用户侧页面、运营后台页面及热搜词生成逻辑，覆盖热词采集、排序、违规过滤、次日展示与精品内容绑定流程。</p>
       <div class="duty"><b>项目进度：</b>方案通过需求评审并进入研发排期；实习结束前尚未正式上线。</div>
-      <a class="figma-link" href="img/figma_search.png" target="_blank" rel="noopener" aria-label="查看精品搜索与热搜管理 Figma 原图">
-        <img class="figma-shot" loading="lazy" src="img/figma_search.png" alt="精品搜索与热搜管理 Figma 总览">
-      </a>
-      <p class="evidence-note">Figma 方案总览：同步设计搜索页更新内容、热搜词规则与运营后台配置页面。点击图片可查看原图。</p>
+      <figure class="case-image">
+        <img loading="lazy" src="img/figma_search.png" width="960" height="855" alt="精品搜索与热搜管理 Figma 总览">
+        <figcaption>Figma 方案总览涵盖搜索页、热搜词规则与运营后台配置。</figcaption>
+      </figure>
     </div>
 
     <div class="card reveal">
-      <h3><span class="idx">案例四</span>VIP 商业化功能</h3>
+      <h3><span class="idx">已上线</span>VIP 商业化功能</h3>
       <p class="desc">为支持产品商业化转型，拆解 6 款同类 AI 产品的会员权益、付费入口与转化逻辑，参与 VIP 页面和权益方案设计。</p>
-      <div class="duty"><b>职责与结果：</b>部分设计被团队采用，功能后续上线，为产品商业化转型和持续研发投入提供支持。</div>
-      <a class="figma-link" href="img/figma_vip.png" target="_blank" rel="noopener" aria-label="查看 VIP 商业化功能 Figma 原图">
-        <img class="figma-shot" loading="lazy" src="img/figma_vip.png" alt="VIP 商业化功能 Figma 总览">
-      </a>
-      <p class="evidence-note">Figma 方案总览：覆盖会员入口、权益展示、套餐选择、支付开通及状态反馈。点击图片可查看原图。</p>
+      <div class="duty"><b>项目结果</b>　部分设计被团队采纳，会员功能后续上线。</div>
+      <figure class="case-image">
+        <img loading="lazy" src="img/figma_vip.png" width="1389" height="741" alt="VIP 商业化功能 Figma 总览">
+        <figcaption>Figma 方案总览涵盖会员入口、权益展示、套餐选择、支付开通及状态反馈。</figcaption>
+      </figure>
     </div>
 
     <div class="card reveal" style="margin-top:18px">
       <h3><span class="idx">研究与拓展</span>商业化竞品拆解与互动玩法调研</h3>
       <p class="desc">围绕会员体系、付费入口、互动玩法和内容沉淀开展竞品研究，将公开产品的功能结构、权益设计与用户路径转化为方案输入，并结合业务场景形成产品设计建议。</p>
       <div class="img-grid">
-        <div class="img-box"><img loading="lazy" src="img/img_02.jpg" alt="AI 产品会员体系竞品研究"><div class="cap">会员体系与权益结构研究</div></div>
-        <div class="img-box"><img loading="lazy" src="img/img_03.jpg" alt="AI 产品商业化竞品研究"><div class="cap">商业化入口与转化路径研究</div></div>
-        <div class="img-box"><img loading="lazy" src="img/img_04.jpg" alt="语音房互动玩法调研"><div class="cap">语音房互动玩法与接入方式</div></div>
-        <div class="img-box"><img loading="lazy" src="img/img_05.jpg" alt="互动游戏与内容玩法调研"><div class="cap">互动游戏与内容玩法拆解</div></div>
+        <figure class="case-image">
+          <img loading="lazy" src="img/img_02.jpg" width="1600" height="816" alt="AI 产品会员体系竞品研究">
+          <figcaption>会员体系与权益结构研究</figcaption>
+        </figure>
+        <figure class="case-image">
+          <img loading="lazy" src="img/img_03.jpg" width="1600" height="1457" alt="AI 产品商业化竞品研究">
+          <figcaption>商业化入口与转化路径研究</figcaption>
+        </figure>
+        <figure class="case-image">
+          <img loading="lazy" src="img/img_04.jpg" width="1600" height="1248" alt="语音房互动玩法调研">
+          <figcaption>语音房互动玩法与接入方式</figcaption>
+        </figure>
+        <figure class="case-image">
+          <img loading="lazy" src="img/img_05.jpg" width="1600" height="1242" alt="互动游戏与内容玩法调研">
+          <figcaption>互动游戏与内容玩法拆解</figcaption>
+        </figure>
       </div>
       <p class="evidence-note">以上均为公开竞品与方案结构展示，不包含原公司后台数据。</p>
     </div>
@@ -416,8 +430,14 @@
       <h3><span class="idx">案例二</span>个人项目｜垂类短视频账号运营</h3>
       <p class="desc">独立运营抖音 3D 建模动画账号与个人生活账号，负责选题、制作、封面、标题与发布时间测试。3D 建模账号单条播放 173.9 万、点赞 7.3 万；个人生活账号单条播放 480 万、点赞 22 万；两账号合计涨粉 1,600+、累计收藏 1 万+，B 站同步产出 10 万+ 播放内容。</p>
       <div class="img-grid">
-        <div class="img-box"><img src="img/img_07.jpg" alt="抖音账号主页"><div class="cap">抖音账号主页</div></div>
-        <div class="img-box"><img src="img/img_08.jpg" alt="作品数据详情"><div class="cap">作品数据：播放 173.9万 · 点赞 7.3万</div></div>
+        <figure class="case-image">
+          <img loading="lazy" src="img/img_07.jpg" width="1600" height="3555" alt="抖音账号主页">
+          <figcaption>抖音账号主页</figcaption>
+        </figure>
+        <figure class="case-image">
+          <img loading="lazy" src="img/img_08.jpg" width="1600" height="3555" alt="作品数据详情">
+          <figcaption>作品播放 173.9 万 · 点赞 7.3 万</figcaption>
+        </figure>
       </div>
     </div>
   </div>
@@ -434,15 +454,19 @@
       <h3><span class="idx">原型验证</span>角色音色匹配工作台</h3>
       <p class="desc">针对批量选声需要反复对照角色表和音色库的问题，使用 AI 辅助搭建网页原型。工具根据角色设定和音色特征推荐候选，支持试听、手动调整和导出匹配表。</p>
       <div class="process-flow"><span>导入角色表</span><span class="arrow">→</span><span>推荐音色</span><span class="arrow">→</span><span>试听与调整</span><span class="arrow">→</span><span>导出匹配表</span></div>
-      <img class="img-full" loading="lazy" src="img/voice-match-studio.jpg" alt="角色音色匹配工作台的候选推荐与试听界面">
-      <p class="evidence-note">工作台运行截图，使用内置示例角色验证匹配流程。</p>
+      <figure class="case-image">
+        <img loading="lazy" src="img/voice-match-studio.jpg" width="1560" height="810" alt="角色音色匹配工作台的候选推荐与试听界面">
+        <figcaption>工作台运行截图，使用内置示例角色验证匹配流程。</figcaption>
+      </figure>
     </div>
     <div class="card reveal">
       <h3><span class="idx">内部项目</span>AI 角色筛选与音色匹配工具</h3>
       <p class="desc">针对角色筛选、设定判断与音色匹配依赖人工翻表和逐条查看的问题，使用 Codex 搭建可视化工具，整合数据解析、条件筛选、角色预览、重复标记、设定总结及音色候选建议，将原本小时级的筛选流程压缩至分钟级，支撑角色内容持续更新。</p>
       <div class="process-flow"><span>数据导入</span><span class="arrow">→</span><span>筛选预览</span><span class="arrow">→</span><span>重复校验</span><span class="arrow">→</span><span>角色总结</span><span class="arrow">→</span><span>音色建议</span></div>
-      <img class="img-full" loading="lazy" src="img/img_09.jpg" alt="AI 角色筛选工具快速上手界面">
-      <p class="evidence-note">工具使用流程示意，页面展示为本地示例数据，不公开真实用户明细。</p>
+      <figure class="case-image">
+        <img loading="lazy" src="img/img_09.jpg" width="1600" height="840" alt="AI 角色筛选工具快速上手界面">
+        <figcaption>工具使用流程示意，图中采用本地示例数据。</figcaption>
+      </figure>
     </div>
   </div>
 </section>
@@ -533,8 +557,18 @@
 
 <script>
   // Reveal on scroll
-  const io = new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{threshold:.1});
-  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('on');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {threshold: .08});
+    document.querySelectorAll('.reveal').forEach(element => observer.observe(element));
+    document.documentElement.classList.add('has-reveal');
+  }
 
   // Play video on click (lazy load)
   function playVid(box){

@@ -133,6 +133,14 @@
     border:1px solid var(--line);border-radius:999px;padding:4px 11px;
   }
   .process-flow .arrow{border:0;background:transparent;padding:0;color:#9ca3af}
+  .project-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .project-links a{
+    border:1px solid var(--line);border-radius:8px;padding:6px 14px;
+    color:var(--accent);font-size:13px;font-weight:600;
+  }
+  .project-links a:first-child{background:var(--accent-soft);border-color:var(--accent-soft)}
+  .project-links a:hover{border-color:var(--accent)}
+  .project-links a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
   /* ---------- Images ---------- */
   .img-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:8px}
@@ -429,6 +437,17 @@
     <div class="sec-head reveal">
       <div class="kicker">EFFICIENCY</div>
       <h2>效率案例｜将重复运营流程工具化</h2>
+    </div>
+    <div class="card reveal">
+      <h3><span class="idx">可在线体验</span>Voice Match Studio｜角色音色匹配工作台</h3>
+      <p class="desc">针对 AI 角色批量选声时需要反复对照角色表和音色库的问题，搭建 Voice Match Studio，将音色推荐、试听、手动调整和结果导出集中到一个工作台。</p>
+      <div class="duty"><b>匹配逻辑：</b>以角色设定和音色标签为基础，结合性别、声线成熟度及音高、明亮度等声学特征推荐候选音色，保留人工试听和调整。</div>
+      <div class="process-flow"><span>导入角色表</span><span class="arrow">→</span><span>推荐音色</span><span class="arrow">→</span><span>试听与调整</span><span class="arrow">→</span><span>导出含 voiceId 的 XLSX</span></div>
+      <div class="project-links">
+        <a href="https://wu-nai-a.github.io/voice-match-studio/" target="_blank" rel="noopener">在线体验</a>
+        <a href="https://github.com/wu-nai-a/voice-match-studio" target="_blank" rel="noopener">GitHub 源码</a>
+      </div>
+      <p class="evidence-note">打开工具后点击「测试集」，可用内置示例体验完整匹配流程。</p>
     </div>
     <div class="card reveal">
       <h3><span class="idx">内部项目</span>AI 角色筛选与音色匹配工具</h3>
